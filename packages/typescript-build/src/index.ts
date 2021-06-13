@@ -11,7 +11,8 @@ export interface Options {
     ts?: Partial<TsLoaderOptions>
     tsx?: Partial<TsLoaderOptions>
   }
-  typeCheck?: TsCheckerOptions | boolean
+  typeCheck?: TsCheckerOptions | boolean,
+  tsconfig?: string
 }
 
 declare module '@nuxt/types' {
@@ -22,7 +23,8 @@ declare module '@nuxt/types' {
 
 const defaults: Options = {
   ignoreNotFoundWarnings: false,
-  typeCheck: true
+  typeCheck: true,
+  tsconfig: 'tsconfig.json'
 }
 
 const tsModule: Module<Options> = function (moduleOptions) {
@@ -76,7 +78,7 @@ const tsModule: Module<Options> = function (moduleOptions) {
       const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
       config.plugins!.push(new ForkTsCheckerWebpackPlugin(Object.assign({
         typescript: {
-          configFile: path.resolve(this.options.rootDir!, 'tsconfig.json'),
+          configFile: path.resolve(this.options.rootDir!, this.options.tsconfig),
           extensions: {
             vue: true
           }
